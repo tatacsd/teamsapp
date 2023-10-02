@@ -4,7 +4,6 @@ import styled, { DefaultTheme } from 'styled-components/native';
 export const Container = styled.View`
   width: 100%;
   margin-top: 24px;
-  padding: 24px;
 
   flex-direction: row;
   justify-content: center;
