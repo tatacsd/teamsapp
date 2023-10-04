@@ -1,3 +1,4 @@
+import { Button } from '@components/Button';
 import { GroupCard } from '@components/GroupCard';
 import { Header } from '@components/Header';
 import { Highlight } from '@components/Highlight';
@@ -23,6 +24,10 @@ export function Groups() {
         ListEmptyComponent={
           <ListEmpty title="You don't have any groups yet." />
         }
+      />
+      <Button
+        title="Create Group"
+        onPress={() => console.log('Create Group')}
       />
     </Container>
   );
