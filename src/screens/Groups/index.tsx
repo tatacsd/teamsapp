@@ -6,7 +6,7 @@ import { ListEmpty } from '@components/ListEmpty';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { groupGetAll } from '@storage/group/groupsGetAll';
 import { useCallback, useState } from 'react';
-import { FlatList } from 'react-native';
+import { Alert, FlatList } from 'react-native';
 import { Container } from './styles';
 
 export function Groups() {
@@ -18,7 +18,7 @@ export function Groups() {
       const data = await groupGetAll();
       setGroups(data);
     } catch (error) {
-      console.log(error);
+      Alert.alert('Groups', 'It was not possible to load your groups.');
     }
   };
 
