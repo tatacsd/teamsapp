@@ -26,6 +26,10 @@ export function Groups() {
     navigate('newGroup');
   };
 
+  const handleOpenGroup = (group: string) => {
+    navigate('players', { group });
+  };
+
   useFocusEffect(
     useCallback(() => {
       fetchGroups();
@@ -44,7 +48,9 @@ export function Groups() {
       <FlatList
         data={groups}
         keyExtractor={(item) => item}
-        renderItem={({ item }) => <GroupCard title={item} />}
+        renderItem={({ item }) => (
+          <GroupCard title={item} onPress={() => handleOpenGroup(item)} />
+        )}
         showsVerticalScrollIndicator={false}
         style={{ marginTop: 24 }}
         contentContainerStyle={{ flex: 1 }}
