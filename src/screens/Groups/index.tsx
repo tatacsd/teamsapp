@@ -3,12 +3,30 @@ import { GroupCard } from '@components/GroupCard';
 import { Header } from '@components/Header';
 import { Highlight } from '@components/Highlight';
 import { ListEmpty } from '@components/ListEmpty';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
 import { FlatList } from 'react-native';
 import { Container } from './styles';
 
-export function Groups() {
+export type RootParamList = {
+  groups: undefined;
+  players: {
+    group: string;
+  };
+  newGroup: undefined;
+};
+
+type GroupsProps = {
+  navigation: NativeStackNavigationProp<RootParamList, 'groups'>;
+};
+
+export function Groups({ navigation }: GroupsProps) {
   const [groups, setGroups] = useState<string[]>([]);
+  const { navigate } = useNavigation();
+  const handleNewGroup = () => {
+    navigation.navigate('newGroup');
+  };
   return (
     <Container>
       <Header />
@@ -25,10 +43,7 @@ export function Groups() {
           <ListEmpty title="You don't have any groups yet." />
         }
       />
-      <Button
-        title="Create Group"
-        onPress={() => console.log('Create Group')}
-      />
+      <Button title="Create Group" onPress={handleNewGroup} />
     </Container>
   );
 }
