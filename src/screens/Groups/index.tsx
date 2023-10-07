@@ -30,10 +30,7 @@ export function Groups() {
           <ListEmpty title="You don't have any groups yet." />
         }
       />
-      <Button
-        title="Create Group"
-        onPress={() => console.log('Create Group')}
-      />
+      <Button title="Create Group" onPress={() => handleNewGroup()} />
     </Container>
   );
 }
