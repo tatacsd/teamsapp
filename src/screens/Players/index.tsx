@@ -150,7 +150,7 @@ export function Players() {
           horizontal
         />
 
-        <NumberOfPlayers>{Players.length}</NumberOfPlayers>
+        <NumberOfPlayers>{players.length}</NumberOfPlayers>
       </HeaderList>
       {isLoading && <Loading />}
       {!isLoading && (
