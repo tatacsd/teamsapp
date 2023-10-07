@@ -5,6 +5,7 @@ import { Header } from '@components/Header';
 import { Highlight } from '@components/Highlight';
 import { Input } from '@components/Input';
 import { ListEmpty } from '@components/ListEmpty';
+import { Loading } from '@components/Loading';
 import { PlayerCard } from '@components/PlayerCard';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { groupRemoveByName } from '@storage/group/groupRemoveByName';
@@ -18,6 +19,7 @@ import { Alert, FlatList, TextInput } from 'react-native';
 import { Container, Form, HeaderList, NumberOfPlayers } from './styles';
 
 export function Players() {
+  const [isLoading, setIsLoading] = useState(true);
   const [newPlayerName, setNewPlayerName] = useState('');
   const [team, setTeam] = useState('Team A');
   const [players, setPlayers] = useState<PlayerStorageDTO[]>([]);
@@ -32,6 +34,7 @@ export function Players() {
     try {
       const playersByTeam = await playerByGoupAndTeam(group, team);
       setPlayers(playersByTeam);
+      setIsLoading(false);
     } catch (error) {
       Alert.alert('New Player', 'An error has occurred');
     }
@@ -113,6 +116,7 @@ export function Players() {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     fetchPlayersByTeam();
   }, [team]);
 
@@ -148,29 +152,34 @@ export function Players() {
 
         <NumberOfPlayers>{Players.length}</NumberOfPlayers>
       </HeaderList>
-      <FlatList
-        data={players}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => (
-          <PlayerCard
-            name={item.name}
-            onRemove={() => handlePlayerRemove(item.name)}
+      {isLoading && <Loading />}
+      {!isLoading && (
+        <>
+          <FlatList
+            data={players}
+            keyExtractor={(item) => item.name}
+            renderItem={({ item }) => (
+              <PlayerCard
+                name={item.name}
+                onRemove={() => handlePlayerRemove(item.name)}
+              />
+            )}
+            ListEmptyComponent={() => (
+              <ListEmpty title="No players added to this group yet" />
+            )}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={[
+              { paddingBottom: 100 },
+              players.length === 0 && { flex: 1 },
+            ]}
           />
-        )}
-        ListEmptyComponent={() => (
-          <ListEmpty title="No players added to this group yet" />
-        )}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={[
-          { paddingBottom: 100 },
-          players.length === 0 && { flex: 1 },
-        ]}
-      />
-      <Button
-        title="Remove Group"
-        type="SECONDARY"
-        onPress={handleRemoveGroup}
-      />
+          <Button
+            title="Remove Group"
+            type="SECONDARY"
+            onPress={handleRemoveGroup}
+          />
+        </>
+      )}
     </Container>
   );
 }
