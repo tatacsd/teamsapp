@@ -8,8 +8,9 @@ export const Container = styled(TextInput)`
     font-family: ${theme.FONT_FAMILY.REGULAR};
     font-size: ${theme.FONT_SIZE.MD}px;
     border-radius: 6px;
-    padding: 6px;
+    padding: 10px 18px;
     min-height: 56px;
     max-height: 56px;
+    flex: 1;
   `}
 `;
