@@ -1,4 +1,5 @@
 import { ButtonIcon } from '@components/ButtonIcon';
+import { Filter } from '@components/Filter';
 import { Header } from '@components/Header';
 import { Highlight } from '@components/Highlight';
 import { Input } from '@components/Input';
@@ -13,6 +14,7 @@ export function Players() {
         <Input placeholder="Player name" autoCorrect={false} />
         <ButtonIcon icon="add" onPress={() => console.log('add player')} />
       </Form>
+      <Filter title="Group A" isActive />
     </Container>
   );
 }
