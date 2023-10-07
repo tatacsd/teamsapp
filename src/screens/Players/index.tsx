@@ -7,8 +7,11 @@ import { Input } from '@components/Input';
 import { ListEmpty } from '@components/ListEmpty';
 import { PlayerCard } from '@components/PlayerCard';
 import { useRoute } from '@react-navigation/native';
+import { playerAddByGroup } from '@storage/player/playerAddByGroup';
+import { playerGetByGroup } from '@storage/player/playerGetByGroup';
+import { AppError } from '@utils/AppError';
 import { useState } from 'react';
-import { FlatList } from 'react-native';
+import { Alert, FlatList } from 'react-native';
 import { Container, Form, HeaderList, NumberOfPlayers } from './styles';
 
 export function Players() {
@@ -16,14 +19,42 @@ export function Players() {
   const [players, setPlayers] = useState([]);
   const route = useRoute();
   const { group } = route.params as { group: string };
+  const [newPlayerName, setNewPlayerName] = useState('');
+
+  const handleAddPlayer = async () => {
+    try {
+      if (newPlayerName.trim().length === 0) {
+        throw new AppError('Player name is required');
+      }
+
+      const newPlayer = {
+        name: newPlayerName,
+        team,
+      };
+
+      await playerAddByGroup(newPlayer, group);
+      const players = await playerGetByGroup(group);
+      console.log(players);
+    } catch (error) {
+      if (error instanceof AppError) {
+        Alert.alert('New Player', error.message);
+      } else {
+        Alert.alert('New Player', 'An error has occurred');
+      }
+    }
+  };
 
   return (
     <Container>
       <Header showBackButton />
       <Highlight title={group} subtitle="Add players and set their teams" />
       <Form>
-        <Input placeholder="Player name" autoCorrect={false} />
-        <ButtonIcon icon="add" onPress={() => console.log('add player')} />
+        <Input
+          placeholder="Player name"
+          autoCorrect={false}
+          onChangeText={setNewPlayerName}
+        />
+        <ButtonIcon icon="add" onPress={handleAddPlayer} />
       </Form>
       <HeaderList>
         <FlatList
