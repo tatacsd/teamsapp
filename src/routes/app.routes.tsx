@@ -13,9 +13,9 @@ export function AppRoutes() {
         contentStyle: { backgroundColor: 'transparent' },
       }}
     >
-      <Screen name="Groups" component={Groups} />
-      <Screen name="Players" component={Players} />
-      <Screen name="NewGroup" component={NewGroup} />
+      <Screen name="groups" component={Groups} />
+      <Screen name="players" component={Players} />
+      <Screen name="newGroup" component={NewGroup} />
     </Navigator>
   );
 }
