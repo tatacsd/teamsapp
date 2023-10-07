@@ -7,24 +7,37 @@ import { Input } from '@components/Input';
 import { ListEmpty } from '@components/ListEmpty';
 import { PlayerCard } from '@components/PlayerCard';
 import { useRoute } from '@react-navigation/native';
+import { PlayerStorageDTO } from '@storage/player/PlayerStorageDTO';
 import { playerAddByGroup } from '@storage/player/playerAddByGroup';
-import { playerGetByGroup } from '@storage/player/playerGetByGroup';
+import { playerByGoupAndTeam } from '@storage/player/playerByGroupAndTeam';
 import { AppError } from '@utils/AppError';
-import { useState } from 'react';
-import { Alert, FlatList } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Alert, FlatList, TextInput } from 'react-native';
 import { Container, Form, HeaderList, NumberOfPlayers } from './styles';
 
 export function Players() {
-  const [team, setTeam] = useState('Group A');
-  const [players, setPlayers] = useState([]);
+  const [newPlayerName, setNewPlayerName] = useState('');
+  const [team, setTeam] = useState('Team A');
+  const [players, setPlayers] = useState<PlayerStorageDTO[]>([]);
+
   const route = useRoute();
   const { group } = route.params as { group: string };
-  const [newPlayerName, setNewPlayerName] = useState('');
+
+  const newPlayerNameInputRef = useRef<TextInput>(null);
 
   const handleAddPlayer = async () => {
     try {
       if (newPlayerName.trim().length === 0) {
-        throw new AppError('Player name is required');
+        return Alert.alert('New Player', 'Player name is required');
+      }
+
+      // check if player already exists
+      const playerAlreadyExists = players.find(
+        (player) => player.name === newPlayerName
+      );
+
+      if (playerAlreadyExists) {
+        return Alert.alert('New Player', 'Player already exists');
       }
 
       const newPlayer = {
@@ -33,8 +46,11 @@ export function Players() {
       };
 
       await playerAddByGroup(newPlayer, group);
-      const players = await playerGetByGroup(group);
-      console.log(players);
+
+      setNewPlayerName('');
+      newPlayerNameInputRef.current?.blur();
+      // Keyboard.dismiss(); // another way to dismiss the keyboard
+      fetchPlayersByTeam();
     } catch (error) {
       if (error instanceof AppError) {
         Alert.alert('New Player', error.message);
@@ -43,6 +59,19 @@ export function Players() {
       }
     }
   };
+
+  const fetchPlayersByTeam = async () => {
+    try {
+      const playersByTeam = await playerByGoupAndTeam(group, team);
+      setPlayers(playersByTeam);
+    } catch (error) {
+      Alert.alert('New Player', 'An error has occurred');
+    }
+  };
+
+  useEffect(() => {
+    fetchPlayersByTeam();
+  }, [team]);
 
   return (
     <Container>
@@ -53,12 +82,16 @@ export function Players() {
           placeholder="Player name"
           autoCorrect={false}
           onChangeText={setNewPlayerName}
+          value={newPlayerName}
+          inputRef={newPlayerNameInputRef}
+          onSubmitEditing={handleAddPlayer}
+          returnKeyType="done"
         />
         <ButtonIcon icon="add" onPress={handleAddPlayer} />
       </Form>
       <HeaderList>
         <FlatList
-          data={['Group A', 'Group B']}
+          data={['Team A', 'Team B']}
           keyExtractor={(item) => item}
           renderItem={({ item }) => (
             <Filter
@@ -74,10 +107,10 @@ export function Players() {
       </HeaderList>
       <FlatList
         data={players}
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
           <PlayerCard
-            name={item}
+            name={item.name}
             onRemove={() => console.log('remove player')}
           />
         )}
