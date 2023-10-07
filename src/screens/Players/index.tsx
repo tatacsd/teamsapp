@@ -6,7 +6,8 @@ import { Highlight } from '@components/Highlight';
 import { Input } from '@components/Input';
 import { ListEmpty } from '@components/ListEmpty';
 import { PlayerCard } from '@components/PlayerCard';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { groupRemoveByName } from '@storage/group/groupRemoveByName';
 import { PlayerStorageDTO } from '@storage/player/PlayerStorageDTO';
 import { playerAddByGroup } from '@storage/player/playerAddByGroup';
 import { playerByGoupAndTeam } from '@storage/player/playerByGroupAndTeam';
@@ -25,6 +26,16 @@ export function Players() {
   const { group } = route.params as { group: string };
 
   const newPlayerNameInputRef = useRef<TextInput>(null);
+  const { navigate } = useNavigation();
+
+  const fetchPlayersByTeam = async () => {
+    try {
+      const playersByTeam = await playerByGoupAndTeam(group, team);
+      setPlayers(playersByTeam);
+    } catch (error) {
+      Alert.alert('New Player', 'An error has occurred');
+    }
+  };
 
   const handleAddPlayer = async () => {
     try {
@@ -61,21 +72,43 @@ export function Players() {
     }
   };
 
-  const fetchPlayersByTeam = async () => {
-    try {
-      const playersByTeam = await playerByGoupAndTeam(group, team);
-      setPlayers(playersByTeam);
-    } catch (error) {
-      Alert.alert('New Player', 'An error has occurred');
-    }
-  };
-
   const handlePlayerRemove = async (player: string) => {
     try {
       await playerRemoveByGroup(player, group);
       fetchPlayersByTeam();
     } catch (error) {
       Alert.alert('Remove Player', 'It was not possible to remove the player');
+    }
+  };
+
+  const handleRemoveGroupConfirm = async () => {
+    try {
+      await groupRemoveByName(group);
+      Alert.alert('Remove Group', 'Group removed successfully');
+      navigate('groups');
+    } catch (error) {
+      Alert.alert('Remove Group', 'It was not possible to remove the group');
+    }
+  };
+
+  const handleRemoveGroup = async () => {
+    try {
+      Alert.alert(
+        'Remove Group',
+        'Are you sure you want to remove this group?',
+        [
+          {
+            text: 'No',
+            style: 'cancel',
+          },
+          {
+            text: 'Yes',
+            onPress: handleRemoveGroupConfirm,
+          },
+        ]
+      );
+    } catch (error) {
+      Alert.alert('Remove Group', 'It was not possible to remove the group');
     }
   };
 
@@ -136,7 +169,7 @@ export function Players() {
       <Button
         title="Remove Group"
         type="SECONDARY"
-        onPress={() => console.log('remove group')}
+        onPress={handleRemoveGroup}
       />
     </Container>
   );
