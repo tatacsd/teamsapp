@@ -9,5 +9,5 @@ export const Container = styled.View`
 export const Title = styled.Text`
   text-align: center;
   font-size: ${({ theme }: { theme: DefaultTheme }) => theme.FONT_SIZE.SM}px;
-  color: #fff;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.COLORS.GRAY_200};
 `;
