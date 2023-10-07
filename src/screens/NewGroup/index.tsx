@@ -45,7 +45,6 @@ export function NewGroup() {
         return;
       } else {
         Alert.alert('New Group', 'Something went wrong, try again later.');
-        console.log(error);
       }
     }
   };
