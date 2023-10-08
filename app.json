@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "teamsapp",
-    "slug": "teamsapp",
+    "slug": "teamapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,16 +15,30 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tcsd.teamapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.tcsd.teamapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "88e79d98-d4d9-4433-8040-da9d881f9337"
+      }
+    },
+    "owner": "tcsd",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/88e79d98-d4d9-4433-8040-da9d881f9337"
     }
   }
 }
