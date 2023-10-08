@@ -86,7 +86,7 @@ This will start the development server and provide instructions for running the 
 
 Alternatively, can downlad expo app on your mobile and scan the QR code to run the app on your device.
 
-![expo QR code](image.png)
+![expo QR code](image-1.png)
 
 ## 🛠 Dependencies
 Here are the main dependencies used in this project:
