@@ -86,7 +86,16 @@ This will start the development server and provide instructions for running the 
 
 Alternatively, can downlad expo app on your mobile and scan the QR code to run the app on your device.
 
-![expo QR code](image-1.png)
+![expo QR code](image.png)
+
+
+add to eas build
+## 🛠 Eas Build
+To build the app using EAS, follow these steps:
+```bash
+eas update --branch production --message ""
+```
+
 
 ## 🛠 Dependencies
 Here are the main dependencies used in this project:
@@ -120,5 +129,5 @@ typescript
 This project is licensed under the MIT License. 
 
 ## Acknowledgments
-This app was created as a learning exercise and is not intended for production use.
+This app was created as a learning exercise.
 Special thanks to [RocketSeat](https://rocketseat.com.br/) for providing the [Ignite](https://rocketseat.com.br/ignite) course and Rodrigo Gonçalves the instructor of this course.
